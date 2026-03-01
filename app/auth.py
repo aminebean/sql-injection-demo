@@ -5,7 +5,7 @@ def login_required(view_func):
     @wraps(view_func)
     def wrapped_view(*args, **kwargs):
         if "user_id" not in session:
-            return redirect(url_for("routes.login_vuln_get"))
+            return redirect(url_for("routes.login_vuln"))
         return view_func(*args, **kwargs)
     return wrapped_view
 

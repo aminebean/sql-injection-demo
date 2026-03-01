@@ -28,11 +28,13 @@ def login_vuln():
         conn = sqlite3.connect(current_app.config["DB_PATH"])
         cur = conn.cursor()
 
+        # INTENTIONALLY VULNERABLE (string concatenation)
         query = (
             "SELECT id, username, role FROM users "
             f"WHERE username = '{username}' AND password_plain = '{password}';"
         )
-        
+        print("Executing vulnerable query:\n", query, "\n")
+
         cur.execute(query)
         row = cur.fetchone()
         conn.close()
@@ -45,32 +47,35 @@ def login_vuln():
 
         return render_template("login_vuln.html", error="Invalid credentials")
 
-    return render_template("login_vuln.html")
+    return render_template("login_vuln.html", error=None)
 
 
 @bp.route("/login_safe", methods=["GET", "POST"])
 def login_safe():
-    if request.method == "POST":
-        username = (request.form.get("username") or "").strip()
-        password = (request.form.get("password") or "").strip()
+    if request.method == "GET":
+        return render_template("login_safe.html", error=None)
 
-        conn = sqlite3.connect(current_app.config["DB_PATH"])
-        cur = conn.cursor()
+    # POST
+    username = (request.form.get("username") or "").strip()
+    password = (request.form.get("password") or "").strip()
 
-        query = "SELECT id, username, password_hash, role FROM users WHERE username = ?"
-        cur.execute(query, (username,))
-        row = cur.fetchone()
-        conn.close()
+    conn = sqlite3.connect(current_app.config["DB_PATH"])
+    cur = conn.cursor()
 
-        if row and check_password_hash(row[2], password):
-            session["user_id"] = row[0]
-            session["username"] = row[1]
-            session["role"] = row[3]
-            return redirect(url_for("routes.dashboard"))
+    cur.execute(
+        "SELECT id, username, password_hash, role FROM users WHERE username = ?",
+        (username,),
+    )
+    row = cur.fetchone()
+    conn.close()
 
-        return render_template("login_safe.html", error="Invalid credentials")
+    if row and check_password_hash(row[2], password):
+        session["user_id"] = row[0]
+        session["username"] = row[1]
+        session["role"] = row[3]
+        return redirect(url_for("routes.dashboard"))
 
-    return render_template("login_safe.html")
+    return render_template("login_safe.html", error="Invalid credentials")
 
 
 @bp.get("/dashboard")
@@ -92,4 +97,3 @@ def logout():
 @bp.get("/about")
 def about():
     return render_template("about.html")
-

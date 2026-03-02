@@ -55,7 +55,6 @@ def login_safe():
     if request.method == "GET":
         return render_template("login_safe.html", error=None)
 
-    # POST
     username = (request.form.get("username") or "").strip()
     password = (request.form.get("password") or "").strip()
 

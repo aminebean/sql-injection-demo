@@ -1,27 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
-<style>
-    .form-group { margin-bottom: 15px; }
-    .error-msg { color: red; margin-bottom: 20px; font-weight: bold; }
-</style>
-
-<h2>Safe Login (Defended)</h2>
+<h2>Secure Login</h2>
 
 {% if error %}
-    <div class="error-msg">Error: {{ error }}</div>
+  <p style="color:red; font-weight:bold;">{{ error }}</p>
 {% endif %}
 
-<form method="POST">
-    <div class="form-group">
-        <label for="username">Username:</label><br>
-        <input type="text" name="username" id="username">
-    </div>
+<form method="POST" action="/login_safe">
+  <label>Username</label><br>
+  <input name="username" value="{{ request.form.username }}"><br><br>
 
-    <div class="form-group">
-        <label for="password">Password:</label><br>
-        <input type="password" name="password" id="password">
-    </div>
+  <label>Password</label><br>
+  <input name="password" type="password"><br><br>
 
-    <button type="submit">Login</button>
+  <button type="submit">Login</button>
 </form>
 {% endblock %}

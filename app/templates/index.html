@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>SQL Injection Demo</h1>
+<h2>Group: DB-B</h2>
 <p>Choose a flow:</p>
 <ul>
-  <li><a href="{{ url_for('routes.login_vuln_get') }}">Vulnerable Login</a></li>
-  <li><a href="{{ url_for('routes.login_safe_get') }}">Secure Login</a></li>
+  <li><a href="{{ url_for('routes.login_vuln') }}">Vulnerable Login</a></li>
+  <li><a href="{{ url_for('routes.login_safe') }}">Secure Login</a></li>
   <li><a href="{{ url_for('routes.dashboard') }}">Dashboard</a></li>
 </ul>
 {% endblock %}

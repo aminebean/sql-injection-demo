@@ -4,6 +4,10 @@
 
 <p>Welcome, {{ username }}!</p>
 
-<a href="/logout">Logout</a>
+<img class="dashboard-img" src="{{ url_for('static', filename='thumbsup.png') }}" alt="Success">
+
+<br><br>
+
+<a href="/logout" class="button">Logout</a>
 {% endblock %}
 
